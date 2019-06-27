@@ -175,6 +175,7 @@ function SteroidsServiceHandler(params, filterManager) {
                     httpMethod: req.method,
                     headers: req.headers,
                     body: req.body,
+                    files: req.files ? req.files : {},
                     queryStringParameters: req.query ? req.query : {}
                 };
 
@@ -306,7 +307,12 @@ function SteroidsRuntime() {
         let server = restify.createServer();
         server.use(restify.acceptParser(server.acceptable));
         server.use(restify.jsonp());
-        server.use(restify.bodyParser({ mapParams: false }));
+        server.use(restify.bodyParser({
+            mapParams: false,
+            multiples: true,
+            maxBodySize: 524288000,
+            maxFileSize: 524288000
+        }));
         
         for (let mKey in routes)
             for (let mParam in routes[mKey]) {
